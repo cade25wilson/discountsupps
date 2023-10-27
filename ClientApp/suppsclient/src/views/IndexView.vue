@@ -1,29 +1,49 @@
 <script>
 import axios from 'axios'
+import SelectDropdown from '../components/SelectDropdown.vue';
+import SearchForm from '../components/SearchForm.vue';
+import ProductImage from '../components/ProductImage.vue';
 
 export default {
   name: 'IndexView',
-  components: {},
+  components: {
+    SelectDropdown,
+    SearchForm,
+    ProductImage,
+  },
   data() {
     return {
       responseData: null,
+      orderBy: this.$route.query.orderby || '-discount',
+
     };
   }, 
   mounted() {
-    axios.get('http://localhost:5081/api/supplement', {
-      params: {
-        page: this.$route.params.page,
-      }
-    })
-    .then(response => {
-      this.responseData = response.data;
-    })
-    .catch(error => {
-      console.log(error);
-    });
-
+    this.getData();
+  }, 
+  watch: {
+    orderBy: function (newOrderBy) {
+      this.$router.push({ query: { orderby: newOrderBy } });
+      this.getData();
+    }
+  },
+  methods: {
+    //make a method called getdata() and call it in mounted() and watch orderBy
+    getData() {
+      axios.get('http://localhost:5081/api/supplement', {
+        params: {
+          page: this.$route.params.page,
+          orderby: this.orderBy,
+        }
+      })
+      .then(response => {
+        this.responseData = response.data;
+      })
+      .catch(error => {
+        console.log(error);
+      });
+    }
   }
-
 };
 </script>
 
@@ -34,72 +54,55 @@ export default {
         <p class="mb-0">Total results</p>
       </div>
       <div class="col-4 col-lg-2">
-        <select name="orderby" class="form-select" aria-label="Sort Products By">
-          <option value="-discount">Highest Discount</option>
-          <option value="discount_price">Lowest Price</option>
-          <option value="-discount_price">Highest Price</option>
-        </select>
+        <SelectDropdown v-model="orderBy" />
       </div>
       <div class="col-4 col-lg-4 text-right">
-        <form class="w-100" action="" method="GET">
-          <div class="input-group mb-3">
-            <input type="text" class="form-control" placeholder="Search" name="search" value="">
-            <button class="btn btn-primary" type="submit" id="button-addon2">Search</button>
-          </div>
-        </form>
+        <SearchForm />
       </div>
     </div>
     <div class="row d-flex align-items-stretch pb-5">
-      <div class="col-xl-3 col-lg-4 col-12 mt-3 h-auto">
+      <div class="col-xl-3 col-lg-4 col-12 mt-3 h-auto" v-for="(product, index) in responseData" :key="index">
         <div class="border rounded p-3 h-100">
-          <div class="mb-2 text-center">
-            <a href="/">
-              <img src="/" alt="image" class="img-thumbnail border-0">
-            </a>
-          </div>
+          <ProductImage :image="product.image" />
           <div class="product-name h-auto">
-            <h5>Test</h5>
+            <h5>{{product.name}}</h5>
             <div class="row h-auto">
               <div class="col-3">
                 <div class="product-price">
                   <p>
-                    <!-- Add discount here 
-                      <span class="text-danger"><del>$1.00</del></span>
-                       -->
-                    $.50
+                    Add discount here 
+                      <span class="text-danger"><del>${{ product.originalPrice }}</del></span>
+                    ${{ product.discountPrice }}
                   </p>
                 </div>
               </div>
               <div class="col-9">
                 <div class="product-brand text-end">
                   <a href="/" class="text-black">
-                    <p class="mb-0">test brand</p>
+                    <p class="mb-0" v-if="product.brand">{{ product.brand }}</p>
                   </a>
                 </div>
               </div>
             </div>
             <div class="row">
               <div class="col-3">
-                <p>$1.00</p>
+                <p>${{product.discount}}🔻</p>
               </div>
-              <div class="col-9 text-end">
+              <div class="col-9 text-end" v-if="product.advertiser">
                 <a href="/" class="text-black">
-                  <p>Test Advertiser</p>
+                  <p>{{ product.advertiser }}</p>
                 </a>
               </div>
             </div>
             <div class="row">
               <div class="text-center">
-                <a href="/" class="btn btn-primary w-75">View Product</a>
+                <a :href="product.url" class="btn btn-primary w-75">View Product</a>
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-    <div v-if="responseData">
-    {{ responseData }}
-    </div>  
     <div class="row">
       <div class="col-12">
         <div class="d-flex justify-content-center">
