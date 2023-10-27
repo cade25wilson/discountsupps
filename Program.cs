@@ -3,7 +3,26 @@ using Microsoft.EntityFrameworkCore.Sqlite;
 using supps.Data;
 using System.Configuration;
 
+var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddCors(options =>
+{
+options.AddPolicy(name: MyAllowSpecificOrigins,
+    policy =>
+    {
+        policy.WithOrigins("http://localhost:5173")
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+        policy.WithOrigins("http://localhost")
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+
+});
+
+
 
 // Add services to the container.
 
@@ -25,6 +44,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors(MyAllowSpecificOrigins);
 
 app.UseAuthorization();
 
