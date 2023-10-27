@@ -1,9 +1,30 @@
 <script>
-// import axios from 'axios'
+import axios from 'axios'
 
-// export default {
+export default {
+  name: 'IndexView',
+  components: {},
+  data() {
+    return {
+      responseData: null,
+    };
+  }, 
+  mounted() {
+    axios.get('http://localhost:5081/api/supplement', {
+      params: {
+        page: this.$route.params.page,
+      }
+    })
+    .then(response => {
+      this.responseData = response.data;
+    })
+    .catch(error => {
+      console.log(error);
+    });
 
-// };
+  }
+
+};
 </script>
 
 <template>
@@ -45,7 +66,7 @@
                     <!-- Add discount here 
                       <span class="text-danger"><del>$1.00</del></span>
                        -->
-                       $.50
+                    $.50
                   </p>
                 </div>
               </div>
@@ -76,10 +97,13 @@
         </div>
       </div>
     </div>
+    <div v-if="responseData">
+    {{ responseData }}
+    </div>  
     <div class="row">
       <div class="col-12">
         <div class="d-flex justify-content-center">
-          
+
         </div>
       </div>
     </div>
