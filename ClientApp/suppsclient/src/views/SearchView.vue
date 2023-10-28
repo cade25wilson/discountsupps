@@ -1,4 +1,4 @@
-<script>
+<!-- <script>
 import axios from 'axios'
 import SelectDropdown from '../components/SelectDropdown.vue';
 import SearchForm from '../components/SearchForm.vue';
@@ -27,7 +27,10 @@ export default {
         orderBy: function (newOrderBy) {
             this.$router.push({ query: { orderby: newOrderBy } });
             this.getData();
-        }
+        },
+        search: function (newSearch) {
+            this.$router.push({ query: { search: newSearch } });
+        },
     },
     methods: {
         getData() {
@@ -35,7 +38,6 @@ export default {
                 params: {
                     page: this.$route.params.page,
                     orderby: this.orderBy,
-                    //get url param search=
                     searchterm: this.$route.query.search
                 }
             })
@@ -51,7 +53,63 @@ export default {
     },
 };
 
+</script> -->
+
+<script>
+import axios from 'axios';
+import SelectDropdown from '../components/SelectDropdown.vue';
+import SearchForm from '../components/SearchForm.vue';
+import ProductLayout from '../components/ProductLayout.vue';
+import HeaderMessage from '../components/HeaderMessage.vue';
+
+export default {
+  name: 'SearchView',
+  components: {
+    SelectDropdown,
+    SearchForm,
+    ProductLayout,
+    HeaderMessage,
+  },
+  data() {
+    return {
+      search: this.$route.query.search || '',
+      responseData: null,
+      orderBy: this.$route.query.orderby || '-discount',
+    };
+  },
+  mounted() {
+    this.getData();
+  },
+  watch: {
+    $route(to) {
+      this.search = to.query.search || '';
+      this.orderBy = to.query.orderby || '-discount';
+      this.getData();
+    },
+  },
+  methods: {
+    getData() {
+      axios
+        .get('http://localhost:5081/api/Search', {
+          params: {
+            page: this.$route.params.page,
+            orderby: this.orderBy,
+            searchterm: this.search,
+          },
+        })
+        .then((response) => {
+          this.responseData = response.data;
+        })
+        .catch((error) => {
+          console.log(error);
+          // Log the URL
+          console.log(this.search);
+        });
+    },
+  },
+};
 </script>
+
 
 <template>
     <div class="container p-4">

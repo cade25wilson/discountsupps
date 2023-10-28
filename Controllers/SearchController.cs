@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
 using supps.Data;
 using supps.Models;
@@ -26,9 +27,11 @@ namespace supps.Controllers
         public async Task<ActionResult<DiscountsuppSupplement>> GetDiscountsuppSupplement(string searchTerm, int page = 0)
         {
             int pageSize = 12;
+            // make a dateonly called date for 2023-10-22
+            DateOnly? date = new DateOnly(2023, 10, 22);
 
             var supplements = await _context.DiscountsuppSupplements
-                .Where(s => s.Active == true && s.Name.ToLower().Contains(searchTerm.ToLower()))
+                .Where(s => s.Active == true && s.Name.ToLower().Contains(searchTerm.ToLower()) && s.Date == date)
                 .Skip((page - 1) * pageSize)
                 .OrderBy(s => s.Name)
                 .Take(pageSize)

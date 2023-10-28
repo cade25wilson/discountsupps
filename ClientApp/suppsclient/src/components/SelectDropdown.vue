@@ -11,10 +11,16 @@
 <script>
 export default {
   name: "SelectDropdown",
+  props: {
+       orderBy: {
+         type: String,
+         required: true,
+       },
+    },
   computed: {
     selectedValue: {
       get() {
-        return this.value; // Set the initial value of selectedValue
+        return this.orderBy;
       },
       set(newValue) {
         this.$emit("input", newValue);
