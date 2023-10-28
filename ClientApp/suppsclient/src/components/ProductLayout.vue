@@ -24,9 +24,8 @@ export default{
             <div class="row h-auto">
               <div class="col-3">
                 <div class="product-price">
-                  <p>
-                    Add discount here 
-                      <span class="text-danger"><del>${{ product.originalPrice }}</del></span>
+                  <p> 
+                    <span class="text-danger"><del>${{ product.originalPrice }}</del></span>
                     ${{ product.discountPrice }}
                   </p>
                 </div>

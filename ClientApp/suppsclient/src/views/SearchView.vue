@@ -1,6 +1,6 @@
 <script>
 import axios from 'axios'
-// import SelectDropdown from '../components/SelectDropdown.vue';
+import SelectDropdown from '../components/SelectDropdown.vue';
 import SearchForm from '../components/SearchForm.vue';
 import ProductLayout from '../components/ProductLayout.vue';
 import HeaderMessage from '../components/HeaderMessage.vue';
@@ -8,7 +8,7 @@ import HeaderMessage from '../components/HeaderMessage.vue';
 export default {
     name: 'SearchView',
     components: {
-        // SelectDropdown,
+        SelectDropdown,
         SearchForm,
         ProductLayout,
         HeaderMessage
@@ -36,7 +36,7 @@ export default {
                     page: this.$route.params.page,
                     orderby: this.orderBy,
                     //get url param search=
-                    search: this.$route.query.search
+                    searchterm: this.$route.query.search
                 }
             })
                 .then(response => {
@@ -48,7 +48,7 @@ export default {
                     console.log(this.$route.query.search);
                 });
         }
-    }
+    },
 };
 
 </script>
