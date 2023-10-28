@@ -52,7 +52,7 @@ export default {
   <div class="container p-4">
     <div class="row">
         <HeaderMessage />
-        <SelectDropdown v-model="orderBy" />
+        <SelectDropdown v-model="orderBy" :orderBy="orderBy"/>
         <SearchForm />
     </div>
     <div class="row d-flex align-items-stretch pb-5">

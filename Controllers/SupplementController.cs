@@ -26,8 +26,10 @@ namespace supps.Controllers
         public async Task<ActionResult<IEnumerable<DiscountsuppSupplement>>> GetDiscountsuppSupplements(int page = 1)
         {
             int pageSize = 12;
+            DateOnly? date = new DateOnly(2023, 10, 22);
+
             var supplements = await _context.DiscountsuppSupplements
-                .Where(s => s.Active == true) // Add the condition for Active
+                .Where(s => s.Active == true && s.Date == date) 
                 .Skip((page - 1) * pageSize)
                 .OrderBy(s => s.Name)
                 .Take(pageSize)
