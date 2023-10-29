@@ -44,13 +44,20 @@ namespace supps.Controllers
                 .Take(pageSize)
                 .ToListAsync();
 
+            var totalItems = _context.DiscountsuppSupplements
+                .Where(s => s.Active == true && s.Name.ToLower().Contains(searchTerm.ToLower()) && s.Date == date)
+                .Count();
+
+            var totalpages = (int)Math.Ceiling(totalItems / (double)pageSize);
+
+            var json = new MyData { TotalItems = totalItems, TotalPages = totalpages, Items = supplements };
 
             if (supplements == null)
             {
                 return NotFound();
             }
 
-            return Ok(supplements);
+            return Ok(json);
         }      
     }
 }

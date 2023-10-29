@@ -4,6 +4,7 @@ import SelectDropdown from '../components/SelectDropdown.vue';
 import SearchForm from '../components/SearchForm.vue';
 import ProductLayout from '../components/ProductLayout.vue';
 import HeaderMessage from '../components/HeaderMessage.vue';
+import PaginationLayout from '../components/PaginationLayout.vue';
 
 export default {
   name: 'IndexView',
@@ -11,7 +12,8 @@ export default {
     SelectDropdown,
     SearchForm,
     ProductLayout,
-    HeaderMessage
+    HeaderMessage,
+    PaginationLayout,
   },
   data() {
     return {
@@ -36,7 +38,7 @@ export default {
     getData() {
       axios.get('http://localhost:5081/api/supplement', {
         params: {
-          page: this.$route.params.page,
+          page: this.$route.query.page,
           orderby: this.orderBy,
         }
       })
@@ -54,7 +56,7 @@ export default {
 <template>
   <div class="container p-4">
     <div class="row">
-        <HeaderMessage :totalProducts="responseData.totalItems"/>
+        <HeaderMessage :totalProducts="responseData?.totalItems"/>
         <SelectDropdown v-model="orderBy" :orderBy="orderBy"/>
         <SearchForm :orderBy="orderBy"/>
     </div>
@@ -63,12 +65,6 @@ export default {
         <ProductLayout :product="product"/>
       </div>
     </div>
-    <div class="row">
-      <div class="col-12">
-        <div class="d-flex justify-content-center">
-
-        </div>
-      </div>
-    </div>
+        <PaginationLayout url="/" :totalPages="responseData?.totalPages"/>
   </div>
 </template>
