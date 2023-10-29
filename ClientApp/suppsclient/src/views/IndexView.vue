@@ -23,13 +23,16 @@ export default {
     this.getData();
   }, 
   watch: {
-    orderBy: function (newOrderBy) {
-      this.$router.push({ query: { orderby: newOrderBy } });
+    '$route.query.orderby': function() {
+      this.orderBy = this.$route.query.orderby;
+      this.getData();
+    },
+    $route(to) {
+      this.orderBy = to.query.orderby || '-discount';
       this.getData();
     }
   },
   methods: {
-    //make a method called getdata() and call it in mounted() and watch orderBy
     getData() {
       axios.get('http://localhost:5081/api/supplement', {
         params: {
@@ -51,12 +54,12 @@ export default {
 <template>
   <div class="container p-4">
     <div class="row">
-        <HeaderMessage />
+        <HeaderMessage :totalProducts="responseData.totalItems"/>
         <SelectDropdown v-model="orderBy" :orderBy="orderBy"/>
-        <SearchForm />
+        <SearchForm :orderBy="orderBy"/>
     </div>
     <div class="row d-flex align-items-stretch pb-5">
-      <div class="col-xl-3 col-lg-4 col-12 mt-3 h-auto" v-for="(product, index) in responseData" :key="index">
+      <div class="col-xl-3 col-lg-4 col-12 mt-3 h-auto" v-for="(product, index) in responseData?.items" :key="index">
         <ProductLayout :product="product"/>
       </div>
     </div>
