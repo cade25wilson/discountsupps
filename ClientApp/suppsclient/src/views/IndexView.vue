@@ -65,6 +65,6 @@ export default {
         <ProductLayout :product="product"/>
       </div>
     </div>
-        <PaginationLayout url="/" :total-pages="responseData?.totalPages"/>
+        <PaginationLayout url="/" :totalPages="responseData?.totalPages"/>
   </div>
 </template>
