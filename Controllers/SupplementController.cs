@@ -23,24 +23,46 @@ namespace supps.Controllers
 
         // GET: api/Supplement
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<DiscountsuppSupplement>>> GetDiscountsuppSupplements(int page = 1)
+        public async Task<ActionResult<MyData>> GetDiscountsuppSupplements(int page = 1, string orderBy = "-discount")
         {
             int pageSize = 12;
             DateOnly? date = new DateOnly(2023, 10, 22);
 
-            var supplements = await _context.DiscountsuppSupplements
-                .Where(s => s.Active == true && s.Date == date) 
-                .Skip((page - 1) * pageSize)
-                .OrderBy(s => s.Name)
-                .Take(pageSize)
-                .ToListAsync();
+            var supplementsQuery = _context.DiscountsuppSupplements
+                .Where(s => s.Active == true && s.Date == date);
+
+            if(orderBy == "-discount")
+            {
+                supplementsQuery = supplementsQuery.OrderByDescending(s => s.Discount);
+            }
+            else if(orderBy == "discount_price")
+            {
+                supplementsQuery = supplementsQuery.OrderByDescending(s => s.DiscountPrice);
+            }
+            else
+            {
+                supplementsQuery = supplementsQuery.OrderBy(s => s.DiscountPrice);
+            }
+
+            var supplements = await supplementsQuery
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+
+            var totalItems = _context.DiscountsuppSupplements
+                .Where(s=>s.Active == true && s.Date == date)
+                .Count();
+
+            var totalpages = (int)Math.Ceiling(totalItems / (double)pageSize);
+
+            var json = new MyData { TotalItems = totalItems, TotalPages = totalpages, Items = supplements };
 
             if (supplements == null)
             {
                 return NotFound();
             }
 
-            return supplements;
+            return json;
         }
     }
 }

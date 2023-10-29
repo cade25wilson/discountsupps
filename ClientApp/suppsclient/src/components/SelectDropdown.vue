@@ -1,32 +1,42 @@
 <template>
   <div class="col-4 col-lg-2">
-    <select name="orderby" class="form-select" v-model="selectedValue">
+    <select name="orderby" class="form-select" v-model="selectedValue" @change="updateRoute">
       <option value="-discount">Discount</option>
-      <option value="discount_price">Lowest Price</option>
-      <option value="-discount_price">Highest Price</option>
+      <option value="-discount_price">Lowest Price</option>
+      <option value="discount_price">Highest Price</option>
     </select>
   </div>
 </template>
-  
+
 <script>
 export default {
   name: "SelectDropdown",
   props: {
-       orderBy: {
-         type: String,
-         required: true,
-       },
+    orderBy: {
+      type: String,
+      required: true,
     },
-  computed: {
-    selectedValue: {
-      get() {
-        return this.orderBy;
-      },
-      set(newValue) {
-        this.$emit("input", newValue);
-      },
+    page: {
+      type: String,
+      required: false,
+    }
+  },
+  data() {
+    return {
+      selectedValue: this.orderBy,
+    };
+  },
+  methods: {
+    updateRoute() {
+      const queryParams = {};
+      queryParams.orderby = this.selectedValue;
+      if (this.page == 'search') {
+        const search = this.$route.query.search;
+        queryParams.search = search;
+      }
+      this.$router.push({ query: queryParams });
+      console.log(queryParams);
     },
   },
 };
 </script>
-  
