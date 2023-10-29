@@ -1,10 +1,9 @@
 <template>
     <div class="row">
       <div class="col-12">
-        {{ totalPages }}
         <div class="d-flex justify-content-center">
-            <router-link :to="{ path: url, query: { page: page - 1, brand: brand, orderby: orderby } }" class="btn btn-outline-primary mx-2 bottom-btn" v-if="page > 1">Previous</router-link>
-            <router-link :to="{ path: url, query: { page: page + 1, brand: brand, orderby: orderby } }" class="btn btn-outline-primary mx-2 bottom-btn" v-if="page < totalPages">Next</router-link>
+            <router-link :to="{ path: url, query: { page: previouspage, brand: brand, orderby: orderby } }" class="btn btn-outline-primary mx-2 bottom-btn" v-if="page > 1">Previous</router-link>
+            <router-link :to="{ path: url, query: { page: nextpage, brand: brand, orderby: orderby } }" class="btn btn-outline-primary mx-2 bottom-btn" v-if="page < totalPages">Next</router-link>
         </div>
       </div>
     </div>
@@ -32,5 +31,27 @@ export default {
 
         };
     },
+    computed: {
+        nextpage() {
+            //make this.page a number
+            const page = parseInt(this.page);
+            return page + 1;
+        },
+        previouspage() {
+            //make this.page a number
+            const page = parseInt(this.page);
+            return page - 1;
+        },
+    },
+    // watch for url changes and update page number accordingly
+    watch: {
+        //watch for url changes
+        $route(to) {
+            //update page number
+            this.page = to.query.page || 1;
+            this.brand = to.query.brand || '';
+            this.orderby = to.query.orderby || '-discount';
+        }
+    }
 }
 </script>
