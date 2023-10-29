@@ -2,8 +2,8 @@
     <div class="row">
       <div class="col-12">
         <div class="d-flex justify-content-center">
-            <router-link :to="{ path: url, query: { page: previouspage, brand: brand, orderby: orderby } }" class="btn btn-outline-primary mx-2 bottom-btn" v-if="page > 1">Previous</router-link>
-            <router-link :to="{ path: url, query: { page: nextpage, brand: brand, orderby: orderby } }" class="btn btn-outline-primary mx-2 bottom-btn" v-if="page < totalPages">Next</router-link>
+            <router-link :to="{ path: url, query: { page: previouspage, brand: brand, orderby: orderby } }" class="btn btn-outline-primary mx-2 bottom-btn" v-if="page > 1" @click="scrolltop">Previous</router-link>
+            <router-link :to="{ path: url, query: { page: nextpage, brand: brand, orderby: orderby } }" class="btn btn-outline-primary mx-2 bottom-btn" v-if="page < totalPages" @click="scrolltop">Next</router-link>
         </div>
       </div>
     </div>
@@ -51,6 +51,11 @@ export default {
             this.page = to.query.page || 1;
             this.brand = to.query.brand || '';
             this.orderby = to.query.orderby || '-discount';
+        }
+    },
+    methods: {
+        scrolltop() {
+            window.scrollTo(0, 0);
         }
     }
 }
