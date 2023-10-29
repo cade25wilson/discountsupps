@@ -16,10 +16,6 @@ export default {
       type: String,
       required: true,
     },
-    page: {
-      type: String,
-      required: false,
-    }
   },
   data() {
     return {
