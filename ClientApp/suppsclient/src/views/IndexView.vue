@@ -4,6 +4,7 @@ import SelectDropdown from '../components/SelectDropdown.vue';
 import SearchForm from '../components/SearchForm.vue';
 import ProductLayout from '../components/ProductLayout.vue';
 import HeaderMessage from '../components/HeaderMessage.vue';
+import PaginationLayout from '../components/PaginationLayout.vue';
 
 export default {
   name: 'IndexView',
@@ -11,7 +12,8 @@ export default {
     SelectDropdown,
     SearchForm,
     ProductLayout,
-    HeaderMessage
+    HeaderMessage,
+    PaginationLayout,
   },
   data() {
     return {
@@ -63,12 +65,6 @@ export default {
         <ProductLayout :product="product"/>
       </div>
     </div>
-    <div class="row">
-      <div class="col-12">
-        <div class="d-flex justify-content-center">
-
-        </div>
-      </div>
-    </div>
+        <PaginationLayout url="/" :total-pages="responseData?.totalItems"/>
   </div>
 </template>
