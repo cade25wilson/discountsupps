@@ -16,6 +16,10 @@ export default {
       type: String,
       required: true,
     },
+    page: {
+      type: String,
+      required: true,
+    },
   },
   data() {
     return {
@@ -29,6 +33,10 @@ export default {
       if (this.page == 'search') {
         const search = this.$route.query.search;
         queryParams.search = search;
+      }
+      if (this.page == 'brand') {
+        const brand = this.$route.query.brand;
+        queryParams.brand = brand;
       }
       this.$router.push({ query: queryParams });
       console.log(queryParams);
