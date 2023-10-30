@@ -21,7 +21,6 @@ export default {
             responseData: null,
             orderBy: this.$route.query.orderby || '-discount',
             page: this.$route.query.page || 1,
-            //make variable called brand set it to data after /brand/ in url
             brand: this.$route.query.brand || '',
         };
     },
