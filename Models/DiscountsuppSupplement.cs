@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace supps.Models;
 
@@ -32,7 +33,7 @@ public partial class DiscountsuppSupplement
     public long? SupplementlinkId { get; set; }
 
     public virtual DiscountsuppAdvertiser? Advertiser { get; set; }
-
+    [JsonIgnore]
     public virtual DiscountsuppBrand? Brand { get; set; }
 
     public virtual DiscountsuppCategory? Category { get; set; }

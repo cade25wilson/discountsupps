@@ -58,12 +58,12 @@ public partial class SuppContext : DbContext
             entity.ToTable("discountsupp_brand");
 
             entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.Name)
+            entity.Property(e => e.BrandName)
                 .HasColumnType("varchar(200)")
-                .HasColumnName("name");
-            entity.Property(e => e.Url)
+                .HasColumnName("brand_name");
+            entity.Property(e => e.BrandUrl)
                 .HasColumnType("varchar(200)")
-                .HasColumnName("url");
+                .HasColumnName("brand_url");
         });
 
         modelBuilder.Entity<DiscountsuppBrandpagevisit>(entity =>
