@@ -24,19 +24,27 @@ namespace supps.Controllers
             DateOnly? date = new DateOnly(2023, 10, 22);
 
             var supplementsQuery = _context.DiscountsuppSupplements
-                .Where(s => s.Active == true && s.Name.ToLower().Contains(searchTerm.ToLower()) && s.Date == date);
+                                .GroupJoin(
+                                    _context.DiscountsuppBrands,
+                                    s => s.BrandId,
+                                    b => b.Id,
+                                    (s, brands) => new { Supplement = s, Brands = brands })
+                                .SelectMany(
+                                    x => x.Brands.DefaultIfEmpty(),
+                                    (x, brand) => new { Supplement = x.Supplement, Brand = brand })
+                                .Where(x => x.Supplement.Active == true && (x.Brand != null || x.Brand.Id == null) && x.Supplement.Date == date && x.Supplement.Name.ToLower().Contains(searchTerm.ToLower()));
 
             if (orderBy == "-discount")
             {
-                supplementsQuery = supplementsQuery.OrderByDescending(s => s.Discount);
+                supplementsQuery = supplementsQuery.OrderByDescending(s => s.Supplement.Discount);
             }
             else if (orderBy == "discount_price")
             {
-                supplementsQuery = supplementsQuery.OrderByDescending(s => s.DiscountPrice);
+                supplementsQuery = supplementsQuery.OrderByDescending(s => s.Supplement.DiscountPrice);
             }
             else
             {
-                supplementsQuery = supplementsQuery.OrderBy(s => s.DiscountPrice);
+                supplementsQuery = supplementsQuery.OrderBy(s => s.Supplement.DiscountPrice);
             }
 
             var supplements = await supplementsQuery
