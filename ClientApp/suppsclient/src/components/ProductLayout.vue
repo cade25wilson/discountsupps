@@ -33,7 +33,7 @@ export default{
               </div>
               <div class="col-9">
                 <div class="product-brand text-end" v-if="product.brand">
-                  <router-link :to="`/brand/`+product.brand.brandUrl" class="text-black">
+                  <router-link :to="`/brand?brand=`+product.brand.brandUrl" class="text-black">
                     <p class="mb-0" >{{ product.brand.brandName }}</p>
                   </router-link>
                 </div>

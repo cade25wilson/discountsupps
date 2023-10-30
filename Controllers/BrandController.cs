@@ -22,40 +22,61 @@ namespace supps.Controllers
         }
 
         // GET: api/Brand/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<object>> GetDiscountsuppSupplement(long id, int page = 1)
+        [HttpGet]
+        public async Task<ActionResult<MyData>> GetDiscountsuppSupplement(string url, int page = 1, string orderBy = "-discount")
         {
             int pageSize = 12;
 
+            var date = new DateOnly(2023, 10, 22);
+
             var brand = await _context.DiscountsuppBrands
-                .Where(b => b.Id == id)
-                .Select(b => b.BrandName)
+                .Where(b => b.BrandUrl.ToLower() == url.ToLower())
+                .Select(b => b.Id)
                 .FirstOrDefaultAsync();
 
-            if (brand == null)
+            var supplementsQuery = _context.DiscountsuppSupplements
+                                .GroupJoin(
+                                    _context.DiscountsuppBrands,
+                                    s => s.BrandId,
+                                    b => b.Id,
+                                    (s, brands) => new { Supplement = s, Brands = brands })
+                                .SelectMany(
+                                   x => x.Brands.DefaultIfEmpty(),
+                                  (x, brand) => new { Supplement = x.Supplement, Brand = brand })
+                                .Where(x => x.Supplement.Active == true && x.Supplement.BrandId == brand); 
+            
+            if (orderBy == "-discount")
             {
-                return NotFound();
+                supplementsQuery = supplementsQuery.OrderByDescending(s => s.Supplement.Discount);
+            }
+            else if (orderBy == "discount_price")
+            {
+                supplementsQuery = supplementsQuery.OrderByDescending(s => s.Supplement.DiscountPrice);
+            }
+            else
+            {
+                supplementsQuery = supplementsQuery.OrderBy(s => s.Supplement.DiscountPrice);
             }
 
-            var supplements = await _context.DiscountsuppSupplements
-                .Where(s => s.BrandId == id && s.Active == true)
+            var supplements = await supplementsQuery
                 .Skip((page - 1) * pageSize)
-                .OrderBy(s => s.Name)
                 .Take(pageSize)
                 .ToListAsync();
+
+            var totalItems = _context.DiscountsuppSupplements
+                .Where(s => s.Active == true && s.Date == date && s.BrandId == brand)
+                .Count();
+
+            var totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
+
+            var json = new MyData { TotalItems = totalItems, TotalPages = totalPages, Items = supplements };
 
             if (supplements == null)
             {
                 return NotFound();
             }
 
-            var json = new
-            {
-                brand,
-                supplements
-            };  
-
-            return json;
+            return Ok(json);
         }  
     }
 }
