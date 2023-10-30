@@ -49,8 +49,6 @@ export default {
         })
         .catch((error) => {
           console.log(error);
-          // Log the URL
-          console.log(this.search);
         });
     },
   },
