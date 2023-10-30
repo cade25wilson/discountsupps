@@ -29,7 +29,7 @@ namespace supps.Controllers
 
             var brand = await _context.DiscountsuppBrands
                 .Where(b => b.Id == id)
-                .Select(b => b.Name)
+                .Select(b => b.BrandName)
                 .FirstOrDefaultAsync();
 
             if (brand == null)
