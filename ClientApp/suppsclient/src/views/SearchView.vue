@@ -45,9 +45,11 @@ export default {
           },
         })
         .then((response) => {
+          console.log('http://localhost:5081/api/Search?searchterm=' + this.search + '&page=' + this.page + '&orderby=' + this.orderBy)
           this.responseData = response.data;
         })
         .catch((error) => {
+          console.log('http://localhost:5081/api/Search?searchterm=' + this.search + '&page=' + this.page + '&orderby=' + this.orderBy)
           console.log(error);
         });
     },

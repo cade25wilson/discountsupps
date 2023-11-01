@@ -26,8 +26,9 @@ export default {
             <template v-if="isFromCdn">
                 <img :src="image" alt="image" class="img-thumbnail border-0">
             </template>
+            
             <template v-else>
-                <img :src="`/assets/images/${image}`" alt="image" class="img-thumbnail border-0">
+                <img :src="`src/assets/${image}`" alt="image" class="img-thumbnail border-0">
             </template>
         </a>
     </div>
