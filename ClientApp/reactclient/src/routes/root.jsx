@@ -54,7 +54,7 @@ export default function Root() {
                 )
                 )}
             </div>
-            <PaginationLayout />
+            {data && <PaginationLayout totalPages={data.totalPages} />}
             </>
             ) : (
                 <div>Loading...</div>

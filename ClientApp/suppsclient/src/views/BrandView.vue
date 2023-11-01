@@ -53,6 +53,7 @@ export default {
                     this.responseData = response.data;
                 })
                 .catch((error) => {
+                    console.log('http://localhost:5081/api/Brand/?url=' + this.brand + '&page=' + this.page + '&orderby=' + this.orderBy)
                     console.log(error);
                 });
         },

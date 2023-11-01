@@ -1,4 +1,3 @@
-import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
@@ -6,14 +5,14 @@ function ProductLayout({product}) {
     if(!product) return (<div>Loading...</div>);
     return (
         <div className="border rounded p-3 h-100">
-            {/* <ProductImage :image="product.supplement.image" :url="product.url"/> */}
+            <ProductImage image={product.supplement.image} url={product.supplement.url} />
             <div className="product-name h-auto">
                 <h5>{product.supplement.name}</h5>
                 <div className="row h-auto">
                     <div className="col-3">
                         <div className="product-price">
                             <p> 
-                                <span className="text-danger"><del>{product.supplement.originalPrice}</del></span>
+                                <span className="text-danger"><del>$ {product.supplement.originalPrice}</del></span>
                                 $ {product.supplement.discountPrice}
                             </p>
                         </div>
@@ -48,6 +47,31 @@ function ProductLayout({product}) {
     );
 }
 
+function ProductImage({image, url}) {
+    let isFromCdn = false;
+    // detect if image starts with http
+    if (image && image.startsWith('http')) {
+        isFromCdn = true;
+    }
+    return (
+        <div className="product-image">
+            <Link to={url}>
+                {isFromCdn ? (
+                <img src={image} alt="product" className="img-fluid" />
+                ) : (
+                    // get them from assets folder
+                    <img src={`/assets/images/${image}`} alt="product" className="img-fluid" />
+                )}
+            </Link>
+        </div>
+    );
+}
+
+ProductImage.propTypes = {
+    image: PropTypes.string,
+    url: PropTypes.string,
+};
+
 ProductLayout.propTypes = {
     product: PropTypes.shape({
         supplement: PropTypes.shape({
@@ -57,6 +81,7 @@ ProductLayout.propTypes = {
             discount: PropTypes.number,
             advertiser: PropTypes.string,
             url: PropTypes.string,
+            image: PropTypes.string,
         }),
         brand: PropTypes.shape({
             brandUrl: PropTypes.string,
